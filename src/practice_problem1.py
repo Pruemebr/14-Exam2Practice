@@ -5,8 +5,8 @@ This problem provides practice at:
   ***  IMPLEMENTING CLASSES.  ***
 
 Authors: David Mutchler, Valerie Galluzzi, Mark Hays, Amanda Stouder,
-         their colleagues and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+         their colleagues and Bryce Pruemer.
+"""  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 ########################################################################
 # Students:
@@ -39,15 +39,15 @@ def main():
     # UN-comment tests as you work the problems.
     ####################################################################
 
-#     run_test_init()
-#     run_test_append_string()
-#     run_test_double()
-#     run_test_shrink()
-#     run_test_double_then_shrink()
-#     run_test_reset()
-#     run_test_steal()
-#     run_test_get_history()
-#     run_test_combined_box()
+    run_test_init()
+    run_test_append_string()
+    run_test_double()
+    run_test_shrink()
+    run_test_double_then_shrink()
+    run_test_reset()
+    run_test_steal()
+    run_test_get_history()
+    run_test_combined_box()
 
 
 ########################################################################
@@ -93,8 +93,20 @@ class Box(object):
           :type contents: str
           :type volume: int
         """
+
+        if len(contents) <= volume:
+            self.contents = contents
+            self.volume = volume
+
+        else:
+            self.contents = ''
+            self.volume = volume
+
+        self.originalcontents = self.contents
+        self.originalvolume = self.volume
+        self.historylist = []
         # --------------------------------------------------------------
-        # TODO: 2. Implement and test this function.
+        # DONE: 2. Implement and test this function.
         #     See the testing code (below) for more examples.
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -134,8 +146,25 @@ class Box(object):
         Type hints:
           :type additional_contents: str
         """
+        s = self.contents
+        clipped = ''
+        if len(self.contents + additional_contents) > self.volume:
+            print(self.volume - len(self.contents))
+            for k in range(self.volume - len(self.contents)):
+                self.contents = self.contents + additional_contents[k]
+                #FIlls up box
+
+            for k in range(len(self.contents) - len(s), len(additional_contents)):
+                clipped = clipped + additional_contents[k]
+            return clipped
+
+        else:
+
+            self.contents = self.contents + additional_contents
+            return ''
+
         # --------------------------------------------------------------
-        # TODO: 3. Implement and test this function.
+        # DONE: 3. Implement and test this function.
         #     See the testing code (below) for more examples.
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -162,7 +191,7 @@ class Box(object):
         What comes in:
           -- self
         What goes out:
-          Returrns a string that is whatever substring of the
+          Returns a string that is whatever substring of the
           doubled contents did not fit in this Box
           (or the empty string if the entire doubled contents fit)
         Side effects:
@@ -190,8 +219,12 @@ class Box(object):
           #   s is 'Robot Fun'   [this is the part of the doubled
           #                       contents that did NOT fit]
         """
+        current = self.contents
+        var = self.append_string(current) #outputs clipped
+        return var
+
         # --------------------------------------------------------------
-        # TODO: 4. Implement and test this function.
+        # DONE: 4. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -239,8 +272,22 @@ class Box(object):
         Type hints:
           :type new_volume: int
         """
+        self.volume = new_volume
+        clipped = ''
+        running = ''
+        oldcontents = self.contents
+        if self.volume < len(self.contents):
+            for k in range(self.volume):
+                running = running + self.contents[k]
+            self.contents = running
+
+            for k in range(self.volume, len(oldcontents)):
+                clipped = clipped + oldcontents[k]
+            return clipped
+        else:
+            return clipped
         # --------------------------------------------------------------
-        # TODO: 5. Implement and test this function.
+        # DONE: 5. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -295,8 +342,12 @@ class Box(object):
         Type hints:
           :type new_volume: int
         """
+        doubleclipped = self.double()
+        shrinkclipped = self.shrink(new_volume)
+        totalclipped = doubleclipped + shrinkclipped
+        return len(totalclipped)
         # --------------------------------------------------------------
-        # TODO: 6. Implement and test this function.
+        # DONE: 6. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -314,8 +365,11 @@ class Box(object):
           Changes this Box's contents and volume to whatever they were
           when this Box was constructed.
         """
+        self.historylist.append(self.contents)
+        self.contents = self.originalcontents
+        self.volume = self.originalvolume
         # --------------------------------------------------------------
-        # TODO: 7. Implement and test this function.
+        # DONE: 7. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -342,8 +396,22 @@ class Box(object):
         Type hints:
           :type other_box: Box
         """
+        new_other = ''
+        snapofcontents = self.contents
+        if len(self.contents)+len(other_box.contents) <= self.volume:
+            self.contents = self.contents + other_box.contents
+            other_box.contents = ''
+
+        else:
+            for k in range(self.volume - len(self.contents)):
+                self.contents = self.contents + other_box.contents[k]
+            totallength = len(snapofcontents + other_box.contents)
+            print(totallength)
+            for k in range(totallength - self.volume + 1, len(other_box.contents)):
+                new_other = new_other + other_box.contents[k]
+            other_box.contents = new_other
         # --------------------------------------------------------------
-        # TODO: 8. Implement and test this function.
+        # DONE: 8. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -385,8 +453,10 @@ class Box(object):
           h = b.get_history()
           #   h is now ['GoodGo', 'GoodBye']
         """
+
+        return self.historylist
         # --------------------------------------------------------------
-        # TODO: 9. Implement and test this function.
+        # DONE: 9. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -411,8 +481,12 @@ class Box(object):
         Type hints:
           :type other_box: Box
         """
+        newcontents = self.contents + other_box.contents
+        newvolume = self.volume + other_box.volume
+        newbox = Box(newcontents, newvolume)
+        return newbox
         # --------------------------------------------------------------
-        # TODO: 10. Implement and test this function.
+        # DONE: 10. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -870,6 +944,7 @@ def run_test_get_history():
 
     # Step 1 of the test:
     box = Box('Good', 20)
+    print('reached')
     h = box.get_history()
     #   h is now []    since there have been no calls to  reset  yet
     expected_contents = 'Good'
